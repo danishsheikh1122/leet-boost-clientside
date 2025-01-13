@@ -66,7 +66,7 @@ const SidePanel = () => {
         </div>
         
         <p className="text-sm italic text-center text-[#4CAF50] dark:text-[#69F0AE] font-medium">
-          Unlock productivity and efficiency like never before!
+          Unlock productivity and efficiency like never before
         </p>
       </div>
     </div>
