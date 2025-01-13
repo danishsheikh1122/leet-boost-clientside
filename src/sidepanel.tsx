@@ -3,12 +3,28 @@ import './style.css';
 'use client'
 import './style.css';
 'use client'
-import React, { useState } from "react";
-import { Play, Moon, Sun } from "lucide-react"; // Optional icons
+import './style.css';
 
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Play, Moon, Sun } from 'lucide-react'; // Optional icons
 
 const SidePanel = () => {
+  // Detect system theme on initial load
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check system theme preference
+    const isSystemDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setIsDarkMode(isSystemDarkMode);
+
+    // Apply theme to the document
+    if (isSystemDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -73,4 +89,3 @@ const SidePanel = () => {
 };
 
 export default SidePanel;
-
