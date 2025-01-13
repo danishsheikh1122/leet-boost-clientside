@@ -1,4 +1,4 @@
-// whatever link will be used the extension is restricted to it self only and change it as u want 
+// // whatever link will be used the extension is restricted to it self only and change it as u want 
 // const GOOGLE_ORIGIN = 'https://www.leetcode.com';
 
 // // Enable the side panel on google.com and disable it on other sites
@@ -24,3 +24,13 @@
 
 // // Allows users to open the side panel by clicking the toolbar icon
 // chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch((error) => console.error(error));
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'open_side_panel') {
+      // Open the side panel using Chrome's sidePanel API
+      chrome.sidePanel.open({
+        path: 'sidepanel.html'  // Path to the side panel content
+      });
+    }
+  });
+  
