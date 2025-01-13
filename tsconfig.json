@@ -7,7 +7,7 @@
     ".plasmo/index.d.ts",
     "./**/*.ts",
     "./**/*.tsx"
-, "src/background.js"  ],
+, "src/background.js", "src/firebase/useFirebaseUser.tsx"  ],
   "compilerOptions": {
     "paths": {
       "~*": [

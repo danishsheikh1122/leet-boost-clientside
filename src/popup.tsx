@@ -1,5 +1,6 @@
-// // src/index.tsx or src/popup.tsx
-// // always add import './style.css'; to add tailwind styling 
+// // // src/index.tsx or src/popup.tsx
+// // // always add import './style.css'; to add tailwind styling 
+
 
 import './style.css';
 'use client'
@@ -101,21 +102,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
-
-// import React from 'react';
-
-// const Popup = () => {
-//   const openSidePanel = () => {
-//     chrome.runtime.sendMessage({ type: 'open_side_panel' });
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={openSidePanel}>
-//         Click to open side panel
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default Popup;

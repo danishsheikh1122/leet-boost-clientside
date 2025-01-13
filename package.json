@@ -14,10 +14,14 @@
     "@clerk/nextjs": "^6.9.9",
     "@mantine/core": "^7.15.3",
     "@mantine/hooks": "^7.15.3",
+    "@plasmohq/messaging": "^0.6.2",
+    "@plasmohq/storage": "^1.13.0",
     "@radix-ui/react-switch": "^1.1.2",
     "@shadcn/ui": "^0.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "firebase": "^11.1.0",
+    "firebase-tools": "^13.29.1",
     "lucide-react": "^0.471.0",
     "plasmo": "0.89.4",
     "react": "18.2.0",
@@ -45,6 +49,24 @@
     "permissions": [
       "tabs",
       "sidePanel"
-    ]
+    ],
+    "oauth2": {
+      "client_id": "$PLASMO_PUBLIC_FIREBASE_CLIENT_ID",
+      "scopes": [
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+      ]
+    },
+    "manifest": {
+      "key": "$CRX_PUBLIC_KEY"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": {
+      "script-src": "'self' https://apis.google.com https://www.gstatic.com 'unsafe-eval' 'unsafe-inline'",
+      "style-src": "'self' 'unsafe-inline'",
+      "connect-src": "'self' https://*.firebaseio.com https://apis.google.com https://www.gstatic.com",
+      "frame-src": "https://accounts.google.com"
+    }
   }
 }

@@ -1,13 +1,9 @@
 import './style.css';
 
-'use client'
-import './style.css';
-'use client'
-import './style.css';
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Play, Moon, Sun } from 'lucide-react'; // Optional icons
+import AuthForm from '~components/AuthForm';
 
 const SidePanel = () => {
   // Detect system theme on initial load
@@ -33,6 +29,7 @@ const SidePanel = () => {
 
   return (
     <div className={`font-sans ${isDarkMode ? 'dark' : ''} w-full h-full fixed top-0 left-0 z-50`}>
+      <AuthForm></AuthForm>
       <div className="bg-white dark:bg-[#282828] text-[#263238] dark:text-[#e6e6e6] rounded-lg shadow-lg p-6 space-y-6 transition-colors duration-200 w-full h-full">
         <header className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-[#FFA116]">LeetBoost</h1>
