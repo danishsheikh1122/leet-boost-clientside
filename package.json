@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@clerk/chrome-extension": "^2.1.11",
     "@clerk/clerk-react": "^5.21.2",
     "@clerk/nextjs": "^6.9.9",
     "@mantine/core": "^7.15.3",
@@ -44,11 +45,15 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "http://localhost/*",
+      "$CLERK_FRONTEND_API/*"
     ],
     "permissions": [
       "tabs",
-      "sidePanel"
+      "sidePanel",
+      "cookies",
+      "storage"
     ],
     "oauth2": {
       "client_id": "$PLASMO_PUBLIC_FIREBASE_CLIENT_ID",
@@ -57,9 +62,7 @@
         "https://www.googleapis.com/auth/userinfo.profile"
       ]
     },
-    "manifest": {
-      "key": "$CRX_PUBLIC_KEY"
-    }
+    "key": "$CRX_PUBLIC_KEY"
   },
   "content_security_policy": {
     "extension_pages": {
