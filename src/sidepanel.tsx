@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Code,
+  Github,
   Moon,
   Sun
 } from "lucide-react"
@@ -357,6 +358,7 @@ const SidePanelContent = () => {
             <span className="mr-2">θ</span>Current Submission Analysis
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
+            {/* yet to add functionality to extract tc and sc from the para and show below */}
             <span>Time Complexity:</span>
             <span>Space Complexity:</span>
             <button
@@ -367,6 +369,19 @@ const SidePanelContent = () => {
               ) : (
                 "Check analysis(make one submission first)"
               )}
+            </button>
+          </div>
+        </div>
+        
+
+        <div>
+          <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
+            <span className="mr-2"><Github></Github></span>Sync to Github
+          </h3>
+          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
+            <button
+              onClick={tosubmission}//github sync funciton name comes here
+              className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
             </button>
           </div>
         </div>
