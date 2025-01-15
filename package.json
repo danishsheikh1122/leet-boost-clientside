@@ -46,14 +46,19 @@
   "manifest": {
     "host_permissions": [
       "https://*/*",
+      "https://leetcode.com/*",
       "http://localhost/*",
-      "$CLERK_FRONTEND_API/*"
+      "$CLERK_FRONTEND_API/*",
+      "https://daleseo-bigocalc.web.val.run/*"
     ],
     "permissions": [
       "tabs",
       "sidePanel",
       "cookies",
-      "storage"
+      "storage",
+      "scripting",
+      "activeTab",
+      "tabs"
     ],
     "oauth2": {
       "client_id": "$PLASMO_PUBLIC_FIREBASE_CLIENT_ID",

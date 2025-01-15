@@ -1,4 +1,4 @@
-// // whatever link will be used the extension is restricted to it self only and change it as u want 
+// // whatever link will be used the extension is restricted to it self only and change it as u want
 // const GOOGLE_ORIGIN = 'https://www.leetcode.com';
 
 // // Enable the side panel on google.com and disable it on other sites
@@ -33,42 +33,41 @@
 //       });
 //     }
 //   });
-  
 
-const LEETCODE_ORIGIN = 'https://leetcode.com';
+const LEETCODE_ORIGIN = "https://leetcode.com"
 
 // Listen for tab updates to enable/disable the side panel
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
-  if (!tab.url) return;
-  const url = new URL(tab.url);
+  if (!tab.url) return
+  const url = new URL(tab.url)
 
   // Enable the side panel on leetcode.com
   if (url.origin === LEETCODE_ORIGIN) {
     await chrome.sidePanel.setOptions({
       tabId,
-      path: 'sidepanel.html', // Path to the HTML file for the side panel
+      path: "sidepanel.html", // Path to the HTML file for the side panel
       enabled: true
-    });
+    })
   } else {
     // Disable the side panel on other sites
     await chrome.sidePanel.setOptions({
       tabId,
       enabled: false
-    });
+    })
   }
-});
+})
 
 // Allow users to open the side panel by clicking the extension icon
 chrome.action.onClicked.addListener((tab) => {
-  chrome.runtime.sendMessage({ type: 'open_side_panel' });
-});
+  chrome.runtime.sendMessage({ type: "open_side_panel" })
+})
 
 // Handle runtime messages for opening the side panel
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'open_side_panel') {
+  if (message.type === "open_side_panel") {
     chrome.sidePanel.setOptions({
-      path: 'sidepanel.html', // Path to your side panel content
+      path: "sidepanel.html", // Path to your side panel content
       enabled: true
-    });
+    })
   }
-});
+})
