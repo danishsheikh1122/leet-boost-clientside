@@ -52,6 +52,8 @@ const SidePanelContent = () => {
   const [submissionStatus, setSubmissionStatus] = useState(
     "Waiting for submission details..."
   )
+  const [tc,setTc]=useState("")
+  const [sc,setSc]=useState("")
   const [submissionCode, setSubmissionCode] = useState("")
   const [submissionLanguage, setSubmissionLanguage] = useState("")
   const [bigOResult, setBigOResult] = useState("")
@@ -171,6 +173,70 @@ const SidePanelContent = () => {
     return () => observer.disconnect()
   }, [checkAcceptedText])
 
+
+  // 
+
+
+//   // Function to extract Big-O notation with regex
+// const extractBigO = (multilineString) => {
+//   // Define regex patterns for common Big-O notations
+//   const bigORegex = /O\(([^)]+)\)/g;
+
+//   // Initialize result object
+//   const complexities = {
+//     timeComplexity: [],
+//     spaceComplexity: [],
+//   };
+
+//   // Split the string into lines and analyze each line
+//   const lines = multilineString.split("\n");
+//   lines.forEach((line) => {
+//     // Check for Time Complexity
+//     if (/Time Complexity/i.test(line)) {
+//       const matches = line.match(bigORegex);
+//       if (matches) {
+//         complexities.timeComplexity.push(...matches);
+//       }
+//     }
+
+//     // Check for Space Complexity
+//     if (/Space Complexity/i.test(line)) {
+//       const matches = line.match(bigORegex);
+//       if (matches) {
+//         complexities.spaceComplexity.push(...matches);
+//       }
+//     }
+//   });
+
+//   return complexities;
+// };
+
+
+function extractTimeAndSpaceComplexity(multilineString) {
+  const regex = /(?:time\s+complexity|tc).*?is\s+O\(([^)]+)\)|(?:space\s+complexity|sc).*?is\s+O\(([^)]+)\)/gi;
+
+  const matches = [...multilineString.matchAll(regex)];
+  const complexities = matches.map(match => {
+      return {
+          timeComplexity: match[1] ? `O(${match[1].trim()})` : null,
+          spaceComplexity: match[2] ? `O(${match[2].trim()})` : null,
+      };
+  });
+
+  const result = complexities.reduce(
+      (acc, curr) => {
+          if (curr.timeComplexity) acc.tc = curr.timeComplexity;
+          if (curr.spaceComplexity) acc.sc = curr.spaceComplexity;
+          return acc;
+      },
+      { tc: null, sc: null }
+  );
+  setTc(result.tc)
+  setSc(result.sc)
+  return result;
+}
+
+
   useEffect(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.action === "updatePopup") {
@@ -192,7 +258,15 @@ const SidePanelContent = () => {
 
         if (result) {
           if (typeof result === "object" && result.result) {
-            setBigOResult(result.result)
+            const result2 = result.result.replace(/`/g, "") // Remove backticks
+            const multilineString = result2
+              .split("\n")
+              .map((line) => line.trim())
+              .join("\n") // Ensure multiline formatting
+
+            // console.log(multilineString)
+            console.log(extractTimeAndSpaceComplexity(multilineString))
+            setBigOResult(multilineString)
           } else {
             setBigOResult("Big-O result not available")
           }
@@ -201,8 +275,10 @@ const SidePanelContent = () => {
         }
       }
     })
-  }, [])
 
+  }, [])
+  
+  
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     document.documentElement.classList.toggle("dark")
@@ -359,8 +435,8 @@ const SidePanelContent = () => {
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             {/* yet to add functionality to extract tc and sc from the para and show below */}
-            <span>Time Complexity:</span>
-            <span>Space Complexity:</span>
+            <span>Time Complexity:{tc}</span>
+            <span>Space Complexity:{sc}</span>
             <button
               onClick={tosubmission}
               className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
@@ -372,17 +448,18 @@ const SidePanelContent = () => {
             </button>
           </div>
         </div>
-        
 
         <div>
           <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
-            <span className="mr-2"><Github></Github></span>Sync to Github
+            <span className="mr-2">
+              <Github></Github>
+            </span>
+            Sync to Github
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             <button
-              onClick={tosubmission}//github sync funciton name comes here
-              className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
-            </button>
+              onClick={tosubmission} //github sync funciton name comes here
+              className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50"></button>
           </div>
         </div>
       </div>

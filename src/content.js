@@ -131,3 +131,62 @@ document
   // Start observing for the submit button
   observeButtonAndAttachListener()
 })()
+
+
+
+
+
+
+
+
+
+// code for observing the question name changed, as soon as the div with specifed text appears, it will alert the question namethe alert will prompt
+
+
+// content.js - To detect when the specific div is loaded after a URL change
+
+const checkForDiv = () => {
+  // Select the main div containing the <a> tag
+  const mainDiv = document.querySelector(
+    '.text-title-large.font-semibold.text-text-primary.dark\\:text-text-primary'
+  );
+
+  if (mainDiv) {
+    // Extract the <a> tag and its content
+    const aTag = mainDiv.querySelector('a');
+    let titleContent = aTag.textContent.trim(); // Trim spaces from the beginning and end
+    const href = aTag.getAttribute('href'); // Get the href attribute
+
+    // Remove everything before and including the first '.' in the title, and trim spaces
+    titleContent = titleContent.substring(titleContent.indexOf('.') + 1).trim();
+
+    // Alert when the div appears
+    // alert("Title: " + titleContent); // Content after the dot
+    // Optionally log the results
+    // console.log("Title:", titleContent);
+  }
+};
+
+// Listen to the `popstate` event which triggers when the URL changes in SPAs
+window.addEventListener('popstate', () => {
+  console.log('URL changed to:', window.location.href);
+  checkForDiv(); // Check for the div after the URL change
+});
+
+// Optional: You can also listen to `pushState` or `replaceState` in case URL is updated without triggering `popstate`
+const originalPushState = history.pushState;
+history.pushState = function () {
+  originalPushState.apply(this, arguments);
+  console.log('URL changed to:', window.location.href);
+  checkForDiv(); // Check for the div after the URL change
+};
+
+const originalReplaceState = history.replaceState;
+history.replaceState = function () {
+  originalReplaceState.apply(this, arguments);
+  console.log('URL changed to:', window.location.href);
+  checkForDiv(); // Check for the div after the URL change
+};
+
+// Initial check if the page is already on the right URL
+checkForDiv();
