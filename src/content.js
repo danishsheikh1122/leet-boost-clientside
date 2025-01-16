@@ -132,95 +132,47 @@ document
   observeButtonAndAttachListener()
 })()
 
-
-
-
-
-
-
-
-
 // code for observing the question name changed, as soon as the div with specifed text appears, it will alert the question namethe alert will prompt
 
+function extractProblemName() {
+  // Get the current URL
+  const currentUrl = window.location.href
 
-// content.js - To detect when the specific div is loaded after a URL change
+  // Use a regular expression to extract the part after "/problems/"
+  const regex = /\/problems\/([^/]+)/
+  const match = currentUrl.match(regex)
 
-// const checkForDiv = () => {
-//   // Select the main div containing the <a> tag
-//   const mainDiv = document.querySelector(
-//     '.text-title-large.font-semibold.text-text-primary.dark\\:text-text-primary'
-//   );
+  // If a match is found, extract the problem name
+  if (match && match[1]) {
+    let problemName = match[1].replace(/-/g, " ") // Replace hyphens with spaces
 
-//   if (mainDiv) {
-//     // Extract the <a> tag and its content
-//     const aTag = mainDiv.querySelector('a');
-//     let titleContent = aTag.textContent.trim(); // Trim spaces from the beginning and end
-//     const href = aTag.getAttribute('href'); // Get the href attribute
+    // Trim any leading or trailing whitespace
+    problemName = problemName.trim()
+    alert(problemName)
+    // If a valid problem name exists, make the API call
+    if (problemName) {
+      const apiUrl = `https://leet-code-extension-companydata.vercel.app/companyInfoStats?title=${problemName}`
 
-//     // Remove everything before and including the first '.' in the title, and trim spaces
-//     titleContent = titleContent.substring(titleContent.indexOf('.') + 1).trim();
-
-//     // Alert when the div appears
-//     // alert("Title: " + titleContent); // Content after the dot
-//     // Optionally log the results
-//     // console.log("Title:", titleContent);
-//   }
-// };
-
-const checkForDiv = () => {
-  // Select the main div containing the <a> tag
-  const mainDiv = document.querySelector(
-    '.text-title-large.font-semibold.text-text-primary.dark\\:text-text-primary'
-  );
-
-  if (mainDiv) {
-    // Extract the <a> tag and its content
-    const aTag = mainDiv.querySelector('a');
-    let titleContent = aTag.textContent.trim(); // Trim spaces from the beginning and end
-
-    // Remove everything before and including the first '.' in the title, and trim spaces
-    titleContent = titleContent.substring(titleContent.indexOf('.') + 1).trim();
-
-    // Make the API call with the dynamic title
-    const apiUrl = `https://leet-code-extension-company-endpoint.vercel.app/companyinfoStats?title=3Sum`;
-
-    // Fetch data and log the response
-    fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`API call failed with status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("API Response:", data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data from API:", error);
-      });
+      // Make the API call using fetch
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          // Log the response data to the console
+          console.log("API Response:", data)
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error)
+        })
+    } else {
+      console.log("Problem name is empty after cleaning.")
+    }
+  } else {
+    console.log("No problem in URL")
   }
-};
+}
 
-// Listen to the `popstate` event which triggers when the URL changes in SPAs
-window.addEventListener('popstate', () => {
-  console.log('URL changed to:', window.location.href);
-  checkForDiv(); // Check for the div after the URL change
-});
+// Listen for changes in the URL (when the page is navigated to a new problem)
+window.addEventListener("popstate", extractProblemName)
 
-// Optional: You can also listen to `pushState` or `replaceState` in case URL is updated without triggering `popstate`
-const originalPushState = history.pushState;
-history.pushState = function () {
-  originalPushState.apply(this, arguments);
-  console.log('URL changed to:', window.location.href);
-  checkForDiv(); // Check for the div after the URL change
-};
-
-const originalReplaceState = history.replaceState;
-history.replaceState = function () {
-  originalReplaceState.apply(this, arguments);
-  console.log('URL changed to:', window.location.href);
-  checkForDiv(); // Check for the div after the URL change
-};
-
-// Initial check if the page is already on the right URL
-checkForDiv();
+// Extract the problem name when the script is first loaded
+extractProblemName()
