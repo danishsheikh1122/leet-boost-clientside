@@ -145,6 +145,28 @@ document
 
 // content.js - To detect when the specific div is loaded after a URL change
 
+// const checkForDiv = () => {
+//   // Select the main div containing the <a> tag
+//   const mainDiv = document.querySelector(
+//     '.text-title-large.font-semibold.text-text-primary.dark\\:text-text-primary'
+//   );
+
+//   if (mainDiv) {
+//     // Extract the <a> tag and its content
+//     const aTag = mainDiv.querySelector('a');
+//     let titleContent = aTag.textContent.trim(); // Trim spaces from the beginning and end
+//     const href = aTag.getAttribute('href'); // Get the href attribute
+
+//     // Remove everything before and including the first '.' in the title, and trim spaces
+//     titleContent = titleContent.substring(titleContent.indexOf('.') + 1).trim();
+
+//     // Alert when the div appears
+//     // alert("Title: " + titleContent); // Content after the dot
+//     // Optionally log the results
+//     // console.log("Title:", titleContent);
+//   }
+// };
+
 const checkForDiv = () => {
   // Select the main div containing the <a> tag
   const mainDiv = document.querySelector(
@@ -155,15 +177,27 @@ const checkForDiv = () => {
     // Extract the <a> tag and its content
     const aTag = mainDiv.querySelector('a');
     let titleContent = aTag.textContent.trim(); // Trim spaces from the beginning and end
-    const href = aTag.getAttribute('href'); // Get the href attribute
 
     // Remove everything before and including the first '.' in the title, and trim spaces
     titleContent = titleContent.substring(titleContent.indexOf('.') + 1).trim();
 
-    // Alert when the div appears
-    // alert("Title: " + titleContent); // Content after the dot
-    // Optionally log the results
-    // console.log("Title:", titleContent);
+    // Make the API call with the dynamic title
+    const apiUrl = `https://leet-code-extension-company-endpoint.vercel.app/companyinfoStats?title=3Sum`;
+
+    // Fetch data and log the response
+    fetch(apiUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`API call failed with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("API Response:", data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from API:", error);
+      });
   }
 };
 
