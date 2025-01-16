@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Code,
+  Divide,
   Github,
   Moon,
   Sun
@@ -255,9 +256,9 @@ const SidePanelContent = () => {
         setCompanyNames(message.result)
 
         // console.log("Company names received:", message.result);
-        console.log("danish", companyNames[0])
+        // console.log("danish", companyNames[0])
 
-        alert("Hello, company names received!")
+        // alert("Hello, company names received!")
         // You can handle the `result` data here (e.g., update the UI)
       }
 
@@ -468,23 +469,35 @@ const SidePanelContent = () => {
             {/* yet to add functionality to extract tc and sc from the para and show below */}
             <div className="flex flex-col">
               <div className="flex ">
-                Time Complexity:
+                Time Complexity:{!tc && "Submit the code first"}
                 <span className="text-[#FFA116] ml-2 font-bold ">{tc}</span>
               </div>
               <div className="flex">
-                Space Complexity:
+                Space Complexity:{!sc && "Submit the code first"}
                 <span className="text-[#FFA116] ml-2 font-bold">{sc}</span>
               </div>
             </div>
-            <button
-              onClick={tosubmission}
-              className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
-              {submissionCode ? (
-                <>"Go to submission" {chrome.runtime.reload()}</>
+            <div className="space-y-2">
+              {!tc ? (
+                <>
+                  <div>Make one submission first and wait</div>
+                </>
               ) : (
-                "Check analysis(make one submission first)"
+                <>
+                  <div>Check detailed analysis of your submission</div>
+                </>
               )}
-            </button>
+
+              <button
+                onClick={tosubmission}
+                className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
+                {submissionCode ? (
+                  <>"Go to submission" {chrome.runtime.reload()}</>
+                ) : (
+                  "Check analysis"
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -497,11 +510,12 @@ const SidePanelContent = () => {
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             <div className="flex flex-wrap gap-2">
+              {!companyNames && "Reload the page"}
               {companyNames &&
                 companyNames.map((company: string, index: number) => (
                   <span
                     key={company}
-                    className="bg-[#FFA116] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-4 ">
+                    className="bg-[#ffa2166c] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-2 ">
                     {company}
                   </span>
                 ))}

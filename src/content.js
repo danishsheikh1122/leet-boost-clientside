@@ -148,7 +148,7 @@ function extractProblemName() {
 
     // Trim any leading or trailing whitespace
     problemName = problemName.trim()
-    alert(problemName)
+    // alert(problemName)
     // If a valid problem name exists, make the API call
     if (problemName) {
       const apiUrl = `https://leet-code-extension-companydata.vercel.app/companyInfoStats?title=${problemName}`
