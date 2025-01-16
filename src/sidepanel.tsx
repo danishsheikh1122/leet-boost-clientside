@@ -52,8 +52,8 @@ const SidePanelContent = () => {
   const [submissionStatus, setSubmissionStatus] = useState(
     "Waiting for submission details..."
   )
-  const [tc,setTc]=useState("")
-  const [sc,setSc]=useState("")
+  const [tc, setTc] = useState("")
+  const [sc, setSc] = useState("")
   const [submissionCode, setSubmissionCode] = useState("")
   const [submissionLanguage, setSubmissionLanguage] = useState("")
   const [bigOResult, setBigOResult] = useState("")
@@ -68,6 +68,8 @@ const SidePanelContent = () => {
       fetchSubmissionDetails()
     }
   }, [])
+
+  const [companyNames, setCompanyNames] = useState(null)
   // logic to toggle between recent submission and big-o page
   const togglepage = () => {
     setSubmissionCode("")
@@ -173,73 +175,94 @@ const SidePanelContent = () => {
     return () => observer.disconnect()
   }, [checkAcceptedText])
 
+  // to log company data to extension console
 
-  // 
+  function extractTimeAndSpaceComplexity(multilineString) {
+    const regex =
+      /(?:time\s+complexity|tc).*?is\s+O\(([^)]+)\)|(?:space\s+complexity|sc).*?is\s+O\(([^)]+)\)/gi
 
-
-//   // Function to extract Big-O notation with regex
-// const extractBigO = (multilineString) => {
-//   // Define regex patterns for common Big-O notations
-//   const bigORegex = /O\(([^)]+)\)/g;
-
-//   // Initialize result object
-//   const complexities = {
-//     timeComplexity: [],
-//     spaceComplexity: [],
-//   };
-
-//   // Split the string into lines and analyze each line
-//   const lines = multilineString.split("\n");
-//   lines.forEach((line) => {
-//     // Check for Time Complexity
-//     if (/Time Complexity/i.test(line)) {
-//       const matches = line.match(bigORegex);
-//       if (matches) {
-//         complexities.timeComplexity.push(...matches);
-//       }
-//     }
-
-//     // Check for Space Complexity
-//     if (/Space Complexity/i.test(line)) {
-//       const matches = line.match(bigORegex);
-//       if (matches) {
-//         complexities.spaceComplexity.push(...matches);
-//       }
-//     }
-//   });
-
-//   return complexities;
-// };
-
-
-function extractTimeAndSpaceComplexity(multilineString) {
-  const regex = /(?:time\s+complexity|tc).*?is\s+O\(([^)]+)\)|(?:space\s+complexity|sc).*?is\s+O\(([^)]+)\)/gi;
-
-  const matches = [...multilineString.matchAll(regex)];
-  const complexities = matches.map(match => {
+    const matches = [...multilineString.matchAll(regex)]
+    const complexities = matches.map((match) => {
       return {
-          timeComplexity: match[1] ? `O(${match[1].trim()})` : null,
-          spaceComplexity: match[2] ? `O(${match[2].trim()})` : null,
-      };
-  });
+        timeComplexity: match[1] ? `O(${match[1].trim()})` : null,
+        spaceComplexity: match[2] ? `O(${match[2].trim()})` : null
+      }
+    })
 
-  const result = complexities.reduce(
+    const result = complexities.reduce(
       (acc, curr) => {
-          if (curr.timeComplexity) acc.tc = curr.timeComplexity;
-          if (curr.spaceComplexity) acc.sc = curr.spaceComplexity;
-          return acc;
+        if (curr.timeComplexity) acc.tc = curr.timeComplexity
+        if (curr.spaceComplexity) acc.sc = curr.spaceComplexity
+        return acc
       },
       { tc: null, sc: null }
-  );
-  setTc(result.tc)
-  setSc(result.sc)
-  return result;
-}
+    )
+    setTc(result.tc)
+    setSc(result.sc)
+    return result
+  }
 
+  // useEffect(() => {
+  //   chrome.runtime.onMessage.addListener((message, sender, sendResponse,data) => {
+
+  //     if (message.action==="sendCompanyNames"){
+  //       alert("hello")
+  //     }
+
+  //     if (message.action === "updatePopup") {
+  //       const { submissionId, submissionCode, result, language } = message
+
+  //       if (submissionId && submissionCode) {
+  //         setSubmissionStatus(`Submission ${submissionId} Accepted!`)
+  //         setSubmissionCode(submissionCode)
+  //         setToggleCode(submissionCode)
+  //       } else {
+  //         setSubmissionStatus("No recent submission found.")
+  //       }
+
+  //       if (language) {
+  //         setSubmissionLanguage(`Language: ${language}`)
+  //       } else {
+  //         setSubmissionLanguage("Language: Not available")
+  //       }
+
+  //       if (result) {
+  //         if (typeof result === "object" && result.result) {
+  //           const result2 = result.result.replace(/`/g, "") // Remove backticks
+  //           const multilineString = result2
+  //             .split("\n")
+  //             .map((line) => line.trim())
+  //             .join("\n") // Ensure multiline formatting
+
+  //           // console.log(multilineString)
+  //           console.log(extractTimeAndSpaceComplexity(multilineString))
+  //           setBigOResult(multilineString)
+  //         } else {
+  //           setBigOResult("Big-O result not available")
+  //         }
+  //       } else {
+  //         setBigOResult("Big-O result not available")
+  //       }
+  //     }
+  //   })
+
+  // }, [])
 
   useEffect(() => {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    const messageListener = (message, sender, sendResponse) => {
+      // console.log(message);
+      if (message.action === "sendCompanyNames") {
+        setCompanyNames(message.result)
+
+        // console.log("Company names received:", message.result);
+        console.log("danish", companyNames[0])
+
+        alert("Hello, company names received!")
+        // You can handle the `result` data here (e.g., update the UI)
+      }
+
       if (message.action === "updatePopup") {
+        // console.log(message.action)
         const { submissionId, submissionCode, result, language } = message
 
         if (submissionId && submissionCode) {
@@ -258,14 +281,16 @@ function extractTimeAndSpaceComplexity(multilineString) {
 
         if (result) {
           if (typeof result === "object" && result.result) {
-            const result2 = result.result.replace(/`/g, "") // Remove backticks
-            const multilineString = result2
+            const resultString = result.result.replace(/`/g, "") // Remove backticks
+            const multilineString = resultString
               .split("\n")
               .map((line) => line.trim())
               .join("\n") // Ensure multiline formatting
 
-            // console.log(multilineString)
-            console.log(extractTimeAndSpaceComplexity(multilineString))
+            console.log(
+              "Extracted Big-O:",
+              extractTimeAndSpaceComplexity(multilineString)
+            )
             setBigOResult(multilineString)
           } else {
             setBigOResult("Big-O result not available")
@@ -274,11 +299,17 @@ function extractTimeAndSpaceComplexity(multilineString) {
           setBigOResult("Big-O result not available")
         }
       }
-    })
+    }
 
+    // Add the listener
+    chrome.runtime.onMessage.addListener(messageListener)
+
+    // Cleanup listener on component unmount
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener)
+    }
   }, [])
-  
-  
+
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
     document.documentElement.classList.toggle("dark")
@@ -431,12 +462,20 @@ function extractTimeAndSpaceComplexity(multilineString) {
 
         <div>
           <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
-            <span className="mr-2">θ</span>Current Submission Analysis
+            <span className="mr-2">ϴ</span>Current Submission Analysis
           </h3>
-          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
+          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col text-md">
             {/* yet to add functionality to extract tc and sc from the para and show below */}
-            <span>Time Complexity:{tc}</span>
-            <span>Space Complexity:{sc}</span>
+            <div className="flex flex-col">
+              <div className="flex ">
+                Time Complexity:
+                <span className="text-[#FFA116] ml-2 font-bold ">{tc}</span>
+              </div>
+              <div className="flex">
+                Space Complexity:
+                <span className="text-[#FFA116] ml-2 font-bold">{sc}</span>
+              </div>
+            </div>
             <button
               onClick={tosubmission}
               className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50">
@@ -446,6 +485,27 @@ function extractTimeAndSpaceComplexity(multilineString) {
                 "Check analysis(make one submission first)"
               )}
             </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
+            <span className="mr-2">
+              {companyNames && companyNames.length - 1}
+            </span>{" "}
+            Companie asked this question
+          </h3>
+          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
+            <div className="flex flex-wrap gap-2">
+              {companyNames &&
+                companyNames.map((company: string, index: number) => (
+                  <span
+                    key={company}
+                    className="bg-[#FFA116] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-4 ">
+                    {company}
+                  </span>
+                ))}
+            </div>
           </div>
         </div>
 

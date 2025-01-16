@@ -158,7 +158,13 @@ function extractProblemName() {
         .then((response) => response.json())
         .then((data) => {
           // Log the response data to the console
-          console.log("API Response:", data)
+          console.log("API Response:", data.company)
+         
+          chrome.runtime.sendMessage({
+            action: "sendCompanyNames",
+            result: data.company
+          });
+
         })
         .catch((error) => {
           console.error("Error fetching data:", error)
