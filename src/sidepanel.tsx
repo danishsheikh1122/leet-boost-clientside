@@ -21,6 +21,8 @@ import {
   Sun
 } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
+import { X } from 'lucide-react'
+import CompanyVideosPage from "~components/CompanyVideos"
 
 const PUBLISHABLE_KEY = process.env.PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const EXTENSION_URL = chrome.runtime.getURL(".")
@@ -202,52 +204,6 @@ const SidePanelContent = () => {
     setSc(result.sc)
     return result
   }
-
-  // useEffect(() => {
-  //   chrome.runtime.onMessage.addListener((message, sender, sendResponse,data) => {
-
-  //     if (message.action==="sendCompanyNames"){
-  //       alert("hello")
-  //     }
-
-  //     if (message.action === "updatePopup") {
-  //       const { submissionId, submissionCode, result, language } = message
-
-  //       if (submissionId && submissionCode) {
-  //         setSubmissionStatus(`Submission ${submissionId} Accepted!`)
-  //         setSubmissionCode(submissionCode)
-  //         setToggleCode(submissionCode)
-  //       } else {
-  //         setSubmissionStatus("No recent submission found.")
-  //       }
-
-  //       if (language) {
-  //         setSubmissionLanguage(`Language: ${language}`)
-  //       } else {
-  //         setSubmissionLanguage("Language: Not available")
-  //       }
-
-  //       if (result) {
-  //         if (typeof result === "object" && result.result) {
-  //           const result2 = result.result.replace(/`/g, "") // Remove backticks
-  //           const multilineString = result2
-  //             .split("\n")
-  //             .map((line) => line.trim())
-  //             .join("\n") // Ensure multiline formatting
-
-  //           // console.log(multilineString)
-  //           console.log(extractTimeAndSpaceComplexity(multilineString))
-  //           setBigOResult(multilineString)
-  //         } else {
-  //           setBigOResult("Big-O result not available")
-  //         }
-  //       } else {
-  //         setBigOResult("Big-O result not available")
-  //       }
-  //     }
-  //   })
-
-  // }, [])
 
   useEffect(() => {
     const messageListener = (message, sender, sendResponse) => {
@@ -534,6 +490,7 @@ const SidePanelContent = () => {
             <button
               onClick={tosubmission} //github sync funciton name comes here
               className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50"></button>
+              <CompanyVideosPage/>
           </div>
         </div>
       </div>
@@ -617,6 +574,9 @@ const SidePanelContent = () => {
       </button>
     </div>
   )
+
+  
+
 
   return (
     <div className="w-full h-full fixed top-0 left-0 z-50 font-sans bg-white dark:bg-[#282828] text-[#263238] dark:text-[#e6e6e6] transition-colors duration-200 overflow-hidden">
