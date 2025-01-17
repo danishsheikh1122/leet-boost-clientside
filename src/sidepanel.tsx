@@ -9,6 +9,8 @@ import {
   UserButton,
   useUser
 } from "@clerk/chrome-extension"
+import CompanyVideos from "~components/CompanyVideos"
+
 import {
   Activity,
   ChevronLeft,
@@ -21,7 +23,6 @@ import {
 } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
 
-import CompanyVideos from "~components/CompanyVideos"
 
 const PUBLISHABLE_KEY = process.env.PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const EXTENSION_URL = chrome.runtime.getURL(".")
@@ -465,7 +466,7 @@ const SidePanelContent = () => {
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             <div className="flex flex-wrap gap-2">
-              {!companyNames && "Reload the page"}
+              {!companyNames && "Fetching....."}
               {companyNames &&
                 companyNames.map((company: string, index: number) => (
                   <span
@@ -486,7 +487,7 @@ const SidePanelContent = () => {
             Sync to Github//\\
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
-            <CompanyVideos />
+              <CompanyVideos/>
           </div>
         </div>
       </div>
@@ -570,6 +571,9 @@ const SidePanelContent = () => {
       </button>
     </div>
   )
+
+  
+
 
   return (
     <div className="w-full h-full fixed top-0 left-0 z-50 font-sans bg-white dark:bg-[#282828] text-[#263238] dark:text-[#e6e6e6] transition-colors duration-200 overflow-hidden">

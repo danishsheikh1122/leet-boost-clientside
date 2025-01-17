@@ -159,12 +159,11 @@ function extractProblemName() {
         .then((data) => {
           // Log the response data to the console
           console.log("API Response:", data.company)
-         
+
           chrome.runtime.sendMessage({
             action: "sendCompanyNames",
             result: data.company
-          });
-
+          })
         })
         .catch((error) => {
           console.error("Error fetching data:", error)
@@ -181,4 +180,7 @@ function extractProblemName() {
 window.addEventListener("popstate", extractProblemName)
 
 // Extract the problem name when the script is first loaded
-extractProblemName()
+
+setInterval(() => {
+  extractProblemName()
+}, 15000)
