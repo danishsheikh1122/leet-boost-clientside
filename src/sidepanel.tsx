@@ -9,7 +9,8 @@ import {
   UserButton,
   useUser
 } from "@clerk/chrome-extension"
-import { Button } from "@mantine/core"
+import CompanyVideos from "~components/CompanyVideos"
+
 import {
   Activity,
   ChevronLeft,
@@ -21,8 +22,7 @@ import {
   Sun
 } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
-import { X } from 'lucide-react'
-import CompanyVideosPage from "~components/CompanyVideos"
+
 
 const PUBLISHABLE_KEY = process.env.PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const EXTENSION_URL = chrome.runtime.getURL(".")
@@ -484,13 +484,12 @@ const SidePanelContent = () => {
             <span className="mr-2">
               <Github></Github>
             </span>
-            Sync to Github
+            Sync to Github//\\
           </h3>
           <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             <button
-              onClick={tosubmission} //github sync funciton name comes here
               className="w-full bg-[#FFA116] hover:bg-[#FFB84D] text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-opacity-50"></button>
-              <CompanyVideosPage/>
+              <CompanyVideos/>
           </div>
         </div>
       </div>
