@@ -44,6 +44,9 @@
     "typescript": "5.3.3"
   },
   "manifest": {
+    "action": {
+      "default_title": "Click to open sidepanel"
+    },
     "host_permissions": [
       "https://*/*",
       "https://leetcode.com/*",
@@ -69,15 +72,21 @@
     },
     "key": "$CRX_PUBLIC_KEY",
     "commands": {
-    "_execute_action": {
-      "suggested_key": { "default": "Ctrl+Shift+Y", "mac": "Command+Shift+Y" },
-      "description": "Open the web extension"
-    },
-    "open_sidepanel": {
-      "suggested_key": { "default": "Ctrl+Shift+S", "mac": "Command+Shift+S" },
-      "description": "Open the side panel"
+      "_execute_action": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+Y",
+          "mac": "Command+Shift+Y"
+        },
+        "description": "Open the web extension"
+      },
+      "open_sidepanel": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+S",
+          "mac": "Command+Shift+S"
+        },
+        "description": "Open the side panel"
+      }
     }
-  }
   },
   "content_security_policy": {
     "extension_pages": {
