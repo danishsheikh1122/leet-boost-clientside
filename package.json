@@ -77,7 +77,7 @@
           "default": "Ctrl+Shift+Y",
           "mac": "Command+Shift+Y"
         },
-        "description": "Open the web extension"
+        "description": "Open the side panel"
       },
       "open_sidepanel": {
         "suggested_key": {
