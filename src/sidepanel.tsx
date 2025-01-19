@@ -25,6 +25,9 @@ import React, { useCallback, useEffect, useState } from "react"
 import CompanyVideos from "~components/CompanyVideos"
 import DrawingApp from "~components/DrawingComponent"
 import ToggleButton from "~components/ToggleBTNSketch"
+import ToggleButtonYt from "~components/ToggleBTNVideo"
+
+// import YouTubeSearch from "~components/Youtubesearch"
 
 const PUBLISHABLE_KEY = process.env.PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const EXTENSION_URL = chrome.runtime.getURL(".")
@@ -543,9 +546,6 @@ const SidePanelContent = () => {
     <div className="space-y-4">
       <h2 className="text-xl font-bold text-[#FFA116]">Submission Details</h2>
       <div className="bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg">
-        {/* <p>
-          <strong>Status:</strong> {status}
-        </p> */}
         <p>
           <strong>Language:</strong> {language}
         </p>
@@ -576,6 +576,8 @@ const SidePanelContent = () => {
         <header className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-[#FFA116]">LeetBoost</h1>
           <div className="flex items-center space-x-2">
+            {/* youtube button */}
+            <ToggleButtonYt />
             {/* Sketch button  */}
             <ToggleButton
               onToggle={toggleSubmission}

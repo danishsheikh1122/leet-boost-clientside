@@ -7,6 +7,7 @@ const ToggleButton = ({ onToggle, showSubmission }) => {
   return (
     <>
       <button
+        title="Draw"
         onClick={onToggle}
         className="w-8 h-8 rounded-full bg-black  dark:bg-white  flex justify-center items-center">
         <Brush className="h-4 w-4 text-white dark:text-black" />
