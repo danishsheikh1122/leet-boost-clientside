@@ -9,10 +9,9 @@ import {
   UserButton,
   useUser
 } from "@clerk/chrome-extension"
-import CompanyVideos from "~components/CompanyVideos"
-
 import {
   Activity,
+  Brush,
   ChevronLeft,
   ChevronRight,
   Code,
@@ -23,6 +22,9 @@ import {
 } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
 
+import CompanyVideos from "~components/CompanyVideos"
+import DrawingApp from "~components/DrawingComponent"
+import ToggleButton from "~components/ToggleBTNSketch"
 
 const PUBLISHABLE_KEY = process.env.PLASMO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const EXTENSION_URL = chrome.runtime.getURL(".")
@@ -61,6 +63,14 @@ const SidePanelContent = () => {
   const [submissionLanguage, setSubmissionLanguage] = useState("")
   const [bigOResult, setBigOResult] = useState("")
   const [toggleCode, setToggleCode] = useState("")
+
+  // drawing app toggle button
+  const [showSubmission, setShowSubmission] = useState(false)
+
+  const toggleSubmission = () => {
+    setShowSubmission((prev) => !prev)
+  }
+
   const checkAcceptedText = useCallback(() => {
     const acceptedText = document.querySelector(
       'span[data-e2e-locator="submission-result"]'
@@ -478,18 +488,6 @@ const SidePanelContent = () => {
             </div>
           </div>
         </div>
-
-        <div>
-          <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
-            <span className="mr-2">
-              <Github></Github>
-            </span>
-            Sync to Github//\\
-          </h3>
-          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
-              <CompanyVideos/>
-          </div>
-        </div>
       </div>
     )
   }
@@ -572,15 +570,19 @@ const SidePanelContent = () => {
     </div>
   )
 
-  
-
-
   return (
     <div className="w-full h-full fixed top-0 left-0 z-50 font-sans bg-white dark:bg-[#282828] text-[#263238] dark:text-[#e6e6e6] transition-colors duration-200 overflow-hidden">
       <div className="p-6 space-y-6 h-full overflow-y-auto">
         <header className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-[#FFA116]">LeetBoost</h1>
           <div className="flex items-center space-x-2">
+            {/* Sketch button  */}
+            <ToggleButton
+              onToggle={toggleSubmission}
+              showSubmission={showSubmission}
+            />
+            {showSubmission && <DrawingApp />}
+
             <button
               onClick={toggleDarkMode}
               className="w-16 h-8 bg-[#f3f3f3] dark:bg-[#363636] rounded-full p-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FFA116]"

@@ -183,4 +183,4 @@ window.addEventListener("popstate", extractProblemName)
 
 setInterval(() => {
   extractProblemName()
-}, 15000)
+}, 20000)
