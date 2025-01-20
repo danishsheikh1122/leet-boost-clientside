@@ -6,6 +6,7 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
+  useAuth,
   UserButton,
   useUser
 } from "@clerk/chrome-extension"
@@ -26,6 +27,7 @@ import CompanyVideos from "~components/CompanyVideos"
 import DrawingApp from "~components/DrawingComponent"
 import ToggleButton from "~components/ToggleBTNSketch"
 import ToggleButtonYt from "~components/ToggleBTNVideo"
+import ActivityComponent from "~components/UserActivity"
 
 // import YouTubeSearch from "~components/Youtubesearch"
 
@@ -66,7 +68,7 @@ const SidePanelContent = () => {
   const [submissionLanguage, setSubmissionLanguage] = useState("")
   const [bigOResult, setBigOResult] = useState("")
   const [toggleCode, setToggleCode] = useState("")
-
+  const { isSignedIn } = useAuth()
   // drawing app toggle button
   const [showSubmission, setShowSubmission] = useState(false)
 
@@ -325,23 +327,10 @@ const SidePanelContent = () => {
 
   const LoggedInContent = () => {
     const { user } = useUser()
-    const [userData, setUserData] = useState(null)
     const [recentSubmissions, setRecentSubmissions] = useState([])
     const [codeComplexity, setCodeComplexity] = useState(null)
 
     useEffect(() => {
-      const fetchUserData = async () => {
-        try {
-          const response = await fetch(
-            `https://leetcode-extension-cnwtrhdk9-pfgdanishs-projects.vercel.app/${user.username}/solved`
-          )
-          const data = await response.json()
-          setUserData(data)
-        } catch (error) {
-          console.error("Error fetching user data:", error)
-        }
-      }
-
       const fetchRecentSubmissions = async () => {
         try {
           const response = await fetch(
@@ -355,7 +344,6 @@ const SidePanelContent = () => {
       }
 
       if (user?.username) {
-        fetchUserData()
         fetchRecentSubmissions()
       }
 
@@ -375,11 +363,6 @@ const SidePanelContent = () => {
         chrome.runtime.onMessage.removeListener(handleMessage)
       }
     }, [user?.username])
-
-    const calculateNextGoal = (solvedProblems) => {
-      return Math.ceil(solvedProblems / 2.5 - 10)
-    }
-
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -390,24 +373,7 @@ const SidePanelContent = () => {
 
         <BigOResult complexity={codeComplexity} />
 
-        {userData && (
-          <div className="bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg">
-            <h3 className="font-semibold text-lg text-[#FFA116] mb-2 flex items-center">
-              <Activity className="mr-2" /> Your Activity
-            </h3>
-            <div className="space-y-2">
-              <p>Problems Solved: {userData.solvedProblem}</p>
-              <p>
-                Easy: {userData.easySolved} | Medium: {userData.mediumSolved} |
-                Hard: {userData.hardSolved}
-              </p>
-              <p>
-                Next Goal: Solve {calculateNextGoal(userData.solvedProblem)}{" "}
-                problems in 10 days
-              </p>
-            </div>
-          </div>
-        )}
+        <ActivityComponent />
 
         <div>
           <h3 className="font-semibold text-lg text-[#FFA116] mb-2 flex items-center">
@@ -484,7 +450,7 @@ const SidePanelContent = () => {
                 companyNames.map((company: string, index: number) => (
                   <span
                     key={company}
-                    className="bg-[#ffa2166c] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-2 ">
+                    className="dark:bg-[#ffa2166c] bg-[#FFA116] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-2 ">
                     {company}
                   </span>
                 ))}
@@ -506,17 +472,18 @@ const SidePanelContent = () => {
         </button>
       </SignInButton>
       <div className="space-y-3">
-        <h2 className="font-semibold text-lg text-[#FFA116]">
-          Why Use LeetBoost?
-        </h2>
-        <ul className="text-sm space-y-2">
+        <h2 className="font-semibold text-lg ">Why Use LeetBoost?</h2>
+        <ul className="text-sm space-y-2 ">
           {[
             "Analyze Code Complexity",
-            "Track Companies",
-            "Auto Cloud Sync",
-            "Push to GitHub",
-            "Comprehensive Insights",
-            "No Premium Required"
+            "Track Appeared Companies",
+            "Full YouTube Experience Without Switching Tabs",
+            "Database of Top 5 YouTube Videos Per Leetcode Problem",
+            "Think and Sketch Ideas",
+            "Automatic Cloud Sync",
+            "Push Code to GitHub",
+            "Comprehensive Insights and Analytics",
+            "No Premium Subscription Required"
           ].map((feature, index) => (
             <li key={index} className="flex items-start">
               <svg
@@ -536,8 +503,14 @@ const SidePanelContent = () => {
           ))}
         </ul>
       </div>
+      <p className="text-xl text-center text-[#FFA116]">
+        Everything Under the Hood
+      </p>
       <p className="text-sm italic text-center text-[#4CAF50] dark:text-[#69F0AE] font-medium">
         Unlock productivity and efficiency like never before!
+      </p>
+      <p className="text-sm text-center font-bold absolute bottom-4">
+        Powered by Passion, Built by Danish Sheikh
       </p>
     </>
   )
@@ -576,14 +549,16 @@ const SidePanelContent = () => {
         <header className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-[#FFA116]">LeetBoost</h1>
           <div className="flex items-center space-x-2">
+            {isSignedIn && <ToggleButtonYt />}
             {/* youtube button */}
-            <ToggleButtonYt />
             {/* Sketch button  */}
-            <ToggleButton
-              onToggle={toggleSubmission}
-              showSubmission={showSubmission}
-            />
-            {showSubmission && <DrawingApp />}
+            {isSignedIn && (
+              <ToggleButton
+                onToggle={toggleSubmission}
+                showSubmission={showSubmission}
+              />
+            )}
+            {isSignedIn && showSubmission && <DrawingApp />}
 
             <button
               onClick={toggleDarkMode}

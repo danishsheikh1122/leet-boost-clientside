@@ -393,8 +393,9 @@
 
 "use client"
 
-import { Search, Wifi, WifiOff } from "lucide-react"
+import { Database, Search, Wifi, WifiOff } from "lucide-react"
 import { useEffect, useState } from "react"
+import YouTubeIcon from "./YoutubeIcon"
 
 interface Video {
   id: { videoId: string }
@@ -438,7 +439,7 @@ const YouTubeSearch = () => {
     setLeetCodeVideos(null)
 
     try {
-      if (isOnline) {
+      if (!isOnline) {
         // Online mode: Fetch from YouTube API
         const response = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&type=video&key=${apiKey}&maxResults=20`
@@ -463,7 +464,7 @@ const YouTubeSearch = () => {
       }
     } catch (error) {
       console.error("Error fetching data:", error)
-      setError("An error occurred while fetching videos. Please try again.")
+      setError("Quota Exceeded. Use database mode or try again after 24 hrs.")
     } finally {
       setLoading(false)
     }
@@ -492,18 +493,18 @@ const YouTubeSearch = () => {
       <header className="sticky top-0 z-50 bg-[#f3f3f3] dark:bg-[#363636] border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-[#FFA116] whitespace-nowrap">
+            <h1 className="text-2xl font-bold text-[#FFA116] whitespace-nowrap lg:block md:hidden hidden">
               LeetTube
             </h1>
-            <div className="flex-1 max-w-3xl mx-8">
+            <div className="flex-1 max-w-3xl mx-4">
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <input
                     type="text"
                     placeholder={
-                      isOnline
+                      !isOnline
                         ? "Search YouTube videos"
-                        : "Search LeetCode problems"
+                        : "Search LeetCode with exact problems name"
                     }
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -514,7 +515,7 @@ const YouTubeSearch = () => {
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="h-10 px-6 bg-[#FFA116] text-white rounded-full hover:bg-[#FFB84D] focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-offset-2 dark:focus:ring-offset-[#282828] transition-all font-medium">
+                  className="h-8 px-4 bg-[#FFA116] text-white rounded-full hover:bg-[#FFB84D] focus:outline-none focus:ring-2 focus:ring-[#FFA116] focus:ring-offset-2 dark:focus:ring-offset-[#282828] transition-all font-medium">
                   Search
                 </button>
               </div>
@@ -522,16 +523,16 @@ const YouTubeSearch = () => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={toggleMode}
-                className="flex items-center space-x-2 px-3 py-1 rounded-full bg-[#FFA116] text-white hover:bg-[#FFB84D] transition-colors">
-                {isOnline ? (
+                className="flex items-center space-x-2 px-3 py-1 rounded-full  text-white  transition-colors">
+                {!isOnline ? (
                   <>
-                    <Wifi className="w-4 h-4" />
-                    <span>Online</span>
+                    <span>From</span>
+                    <YouTubeIcon/>
                   </>
                 ) : (
                   <>
-                    <WifiOff className="w-4 h-4" />
-                    <span>Offline</span>
+                    <span>From</span>
+                    <Database className="w-6 h-6 text-[#FFA116]" />
                   </>
                 )}
               </button>
@@ -555,7 +556,7 @@ const YouTubeSearch = () => {
           </div>
         )}
 
-        {isOnline ? (
+        {!isOnline ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {videos.map((video) => (
               <div
@@ -612,13 +613,13 @@ const YouTubeSearch = () => {
           !loading &&
           query && (
             <div className="text-center py-12">
-              <p className="text-xl font-medium mb-2">
-                No results found for "{query}"
-              </p>
+              {/* <p className="text-xl font-medium mb-2">
+                No  "{query}"
+              </p> */}
               <p className="text-gray-600 dark:text-gray-400">
-                {isOnline
+                {!isOnline
                   ? "Try adjusting your search terms or check your internet connection."
-                  : "Try searching for a specific LeetCode problem like 'Two Sum' or 'Permutations'."}
+                  : "Try searching for a LeetCode problem exactly like 'Two Sum' or 'Permutations'."}
               </p>
             </div>
           )
