@@ -363,6 +363,7 @@ const SidePanelContent = () => {
         chrome.runtime.onMessage.removeListener(handleMessage)
       }
     }, [user?.username])
+
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
@@ -435,25 +436,37 @@ const SidePanelContent = () => {
             </div>
           </div>
         </div>
-
         <div>
           <h3 className="font-semibold text-lg text-[#FFA116] mb-2 ml-2 flex items-center">
             <span className="mr-2">
-              {companyNames && companyNames.length - 1}
-            </span>{" "}
-            Companie asked this question
+              {companyNames ? (
+                companyNames.length - 1
+              ) : (
+                <span className="w-4 h-4 bg-gray-300 rounded animate-pulse inline-block"></span>
+              )}
+            </span>
+            Companies asked this question
           </h3>
-          <div className=" bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
+          <div className="bg-[#f3f3f3] dark:bg-[#363636] p-4 rounded-lg space-y-4 flex flex-col">
             <div className="flex flex-wrap gap-2">
-              {!companyNames && "Fetching....."}
-              {companyNames &&
+              {!companyNames ? (
+                // Skeleton loader
+                <>
+                  {[...Array(4)].map((_, index) => (
+                    <div
+                      key={index}
+                      className="w-24 h-6 bg-gray-300 rounded-md animate-pulse"></div>
+                  ))}
+                </>
+              ) : (
                 companyNames.map((company: string, index: number) => (
                   <span
                     key={company}
-                    className="dark:bg-[#ffa2166c] bg-[#FFA116] text-white px-3 py-1 rounded-md text-sm font-medium  first:hidden p-2 ">
+                    className="dark:bg-[#ffa2166c] bg-[#FFA116] text-white px-3 py-1 rounded-md text-sm font-medium first:hidden p-2">
                     {company}
                   </span>
-                ))}
+                ))
+              )}
             </div>
           </div>
         </div>
