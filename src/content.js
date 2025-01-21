@@ -132,6 +132,10 @@ document
   observeButtonAndAttachListener()
 })()
 
+
+
+
+
 // code for observing the question name changed, as soon as the div with specifed text appears, it will alert the question namethe alert will prompt
 
 function extractProblemName() {

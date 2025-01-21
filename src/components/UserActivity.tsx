@@ -93,14 +93,14 @@ const ActivityComponent = () => {
             <p>
               Problems Solved:{" "}
               {isLoading ? (
-                <span className="animate-pulse bg-gray-300 dark:bg-gray-300 rounded w-24 h-4 inline-block"></span>
+                <span className="animate-pulse bg-gray-300 rounded w-24 h-4 inline-block"></span>
               ) : (
                 userData?.solvedProblem
               )}
             </p>
             <p>
               {isLoading ? (
-                <span className="animate-pulse bg-gray-300 dark:bg-gray-600 rounded w-32 h-4 inline-block"></span>
+                <span className="animate-pulse bg-gray-300 rounded w-32 h-4 inline-block"></span>
               ) : (
                 <>
                   Easy: {userData?.easySolved} | Medium:{" "}
@@ -110,7 +110,7 @@ const ActivityComponent = () => {
             </p>
             <p>
               {isLoading ? (
-                <span className="animate-pulse bg-gray-300 dark:bg-gray-600 rounded w-48 h-4 inline-block"></span>
+                <span className="animate-pulse bg-gray-300 rounded w-48 h-4 inline-block"></span>
               ) : (
                 <>
                   Next Goal: Solve {calculateNextGoal(userData?.solvedProblem)}{" "}

@@ -215,6 +215,20 @@ const SidePanelContent = () => {
       },
       { tc: null, sc: null }
     )
+    // Post-processing to replace 'O(min(n, m))' or 'linear' with 'O(n)'
+    if (
+      result.tc &&
+      (result.tc.includes("min(n, m)") || /linear/i.test(result.tc))
+    ) {
+      result.tc = "O(n)"
+    }
+    if (
+      result.sc &&
+      (result.sc.includes("min(n, m)") || /linear/i.test(result.sc))
+    ) {
+      result.sc = "O(n)"
+    }
+
     setTc(result.tc)
     setSc(result.sc)
     return result
@@ -334,7 +348,7 @@ const SidePanelContent = () => {
       const fetchRecentSubmissions = async () => {
         try {
           const response = await fetch(
-            `https://leetcode-extension-cnwtrhdk9-pfgdanishs-projects.vercel.app/${user.username}/submission`
+            `https://leetcode-extension-api.vercel.app/${user.username}/submission`
           )
           const data = await response.json()
           setRecentSubmissions(data.submission.slice(0, 4))
