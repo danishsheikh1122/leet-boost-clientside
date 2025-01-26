@@ -9,8 +9,14 @@ const ActivityComponent = () => {
   const [error, setError] = useState(null)
   const { user } = useUser()
 
-  const calculateNextGoal = (solvedProblems) =>
-    Math.ceil(solvedProblems / 2.5 - 10)
+  const calculateNextGoal = (solvedProblems) => {
+    if (solvedProblems === 0) {
+      return 5 // Set an initial goal if no problems are solved yet
+    }
+
+    const result = Math.ceil(solvedProblems / 2.5 - 10)
+    return Math.max(result, 1) // Ensure the goal is at least 1
+  }
 
   const fetchUserData = async () => {
     try {
@@ -39,15 +45,31 @@ const ActivityComponent = () => {
       const calculateStreak = (calendar) => {
         const timestamps = Object.keys(calendar)
           .map(Number)
-          .sort((a, b) => b - a)
-        let streak = 1
-        let lastDate = new Date(timestamps[0] * 1000)
+          .sort((a, b) => b - a) // Sort in descending order (latest to oldest)
 
-        for (let i = 1; i < timestamps.length; i++) {
-          const currentDate = new Date(timestamps[i] * 1000)
-          if ((Number(lastDate) - Number(currentDate)) / (1000 * 3600 * 24) === 1) streak++
-          else break
-          lastDate = currentDate
+        let streak = 0 // Initialize streak to 0
+        let currentDate = new Date() // Today's date
+        currentDate.setHours(0, 0, 0, 0) // Normalize to midnight
+
+        for (let timestamp of timestamps) {
+          const submissionDate = new Date(timestamp * 1000) // Convert timestamp to date
+          submissionDate.setHours(0, 0, 0, 0) // Normalize to midnight
+
+          const diffInDays = (currentDate - submissionDate) / (1000 * 3600 * 24) // Difference in days
+
+          if (diffInDays === 0) {
+            // Submission on the same day
+            streak++
+          } else if (diffInDays === 1) {
+            // Consecutive day submission
+            streak++
+          } else {
+            // Missed a day, streak breaks
+            break
+          }
+
+          // Update currentDate to the submission date
+          currentDate = submissionDate
         }
 
         return streak
