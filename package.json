@@ -59,6 +59,7 @@
       "default_title": "Click to open sidepanel"
     },
     "host_permissions": [
+      "https://*/*",
       "https://leetcode.com/*",
       "http://localhost/*",
       "$CLERK_FRONTEND_API/*",
