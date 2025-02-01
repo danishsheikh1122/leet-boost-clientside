@@ -25,6 +25,7 @@ import React, { useCallback, useEffect, useState } from "react"
 
 import CompanyVideos from "~components/CompanyVideos"
 import DrawingApp from "~components/DrawingComponent"
+import ToggleButtonAi from "~components/ToggleBTNAi"
 import ToggleButton from "~components/ToggleBTNSketch"
 import ToggleButtonYt from "~components/ToggleBTNVideo"
 import ActivityComponent from "~components/UserActivity"
@@ -71,9 +72,14 @@ const SidePanelContent = () => {
   const { isSignedIn } = useAuth()
   // drawing app toggle button
   const [showSubmission, setShowSubmission] = useState(false)
+  const [showAi, setShowAi] = useState(false)
 
   const toggleSubmission = () => {
     setShowSubmission((prev) => !prev)
+  }
+
+  const toggleAi = () => {
+    setShowAi((prev) => !prev)
   }
 
   const checkAcceptedText = useCallback(() => {
@@ -570,6 +576,17 @@ const SidePanelContent = () => {
     </div>
   )
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   return (
     <div className="w-full h-full fixed top-0 left-0 z-50 font-sans bg-white dark:bg-[#282828] text-[#263238] dark:text-[#e6e6e6] transition-colors duration-200 overflow-hidden">
       <div className="p-6 space-y-6 h-full overflow-y-auto">
@@ -586,7 +603,10 @@ const SidePanelContent = () => {
               />
             )}
             {isSignedIn && showSubmission && <DrawingApp />}
-
+            {isSignedIn && (
+              <ToggleButtonAi onToggle={toggleAi} showSubmission={showAi} />
+            )}
+            {isSignedIn && showAi && <DrawingApp />}
             <button
               onClick={toggleDarkMode}
               className="w-16 h-8 bg-[#f3f3f3] dark:bg-[#363636] rounded-full p-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FFA116]"
@@ -604,18 +624,17 @@ const SidePanelContent = () => {
                 )}
               </div>
             </button>
-            <SignedIn>
+            {isSignedIn && windowWidth > 768 && (
               <UserButton
                 afterSignOutUrl={`${EXTENSION_URL}/sidepanel.html`}
                 userProfileMode="modal"
-                userProfileUrl={`${EXTENSION_URL}/sidepanel.html`}
                 appearance={{
                   elements: {
                     avatarBox: "w-8 h-8"
                   }
                 }}
               />
-            </SignedIn>
+            )}
           </div>
         </header>
 

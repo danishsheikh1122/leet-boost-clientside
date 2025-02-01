@@ -39,8 +39,9 @@ const ActivityComponent = () => {
       )
       if (!response.ok) throw new Error("Failed to fetch submission calendar")
       const data = await response.json()
-
-      const submissionCalendar = JSON.parse(data.submissionCalendar)
+    
+    const submissionCalendar = JSON.parse(data.submissionCalendar)
+    console.log(submissionCalendar)
 
       const calculateStreak = (calendar) => {
         const timestamps = Object.keys(calendar)
@@ -55,7 +56,7 @@ const ActivityComponent = () => {
           const submissionDate = new Date(timestamp * 1000) // Convert timestamp to date
           submissionDate.setHours(0, 0, 0, 0) // Normalize to midnight
 
-          const diffInDays = (currentDate - submissionDate) / (1000 * 3600 * 24) // Difference in days
+          const diffInDays = (currentDate.getTime() - submissionDate.getTime()) / (1000 * 3600 * 24) // Difference in days
 
           if (diffInDays === 0) {
             // Submission on the same day
